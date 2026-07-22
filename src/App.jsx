@@ -24,12 +24,12 @@ export default function App() {
 
       {/* Main Sections */}
       <main>
-        {/* Hero & About sections with interactive fluid background layer */}
-        <div className="fluid-hero-about-wrapper">
+        {/* Hero section with interactive fluid background layer */}
+        <div className="fluid-hero-wrapper">
           <FluidSimulation />
           <Hero />
-          <About />
         </div>
+        <About />
         <Projects />
         <Skills />
         <Contact />

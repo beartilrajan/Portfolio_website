@@ -289,3 +289,36 @@
     margin-top: 0.5rem;
   }
 }
+
+@media (max-width: 480px) {
+  .hero-section {
+    padding-top: 5.5rem;
+    padding-bottom: 3.5rem;
+  }
+
+  .hero-title {
+    font-size: 1.85rem;
+  }
+
+  .hero-role-text {
+    font-size: 1.25rem;
+  }
+
+  .hero-description {
+    font-size: 0.95rem;
+    margin-bottom: 1.75rem;
+  }
+
+  .code-card-body {
+    padding: 1rem 0.85rem;
+    font-size: 0.78rem;
+  }
+
+  .code-card-header {
+    padding: 0.65rem 0.85rem;
+  }
+
+  .code-card-footer {
+    padding: 0.6rem 0.85rem;
+  }
+}
