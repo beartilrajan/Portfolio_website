@@ -14,13 +14,30 @@ const SECTION_DEFS = [
   { id: 'contact', label: 'Contact', fallbackRatio: 0.94 },
 ];
 
+// Desktop wide curve spanning center viewport
+const DESKTOP_PATHS = {
+  bg: "M 50 0 C 94 130, 6 270, 50 410 C 94 550, 6 690, 50 830 C 94 920, 50 975, 50 1000",
+  dash: "M 52.5 0 C 96.5 130, 8.5 270, 52.5 410 C 96.5 550, 8.5 690, 52.5 830 C 96.5 920, 52.5 975, 52.5 1000",
+  core: "M 50 0 C 94 130, 6 270, 50 410 C 94 550, 6 690, 50 830 C 94 920, 50 975, 50 1000",
+};
+
+// Mobile refined conduit path along left margin (x: 8..16) so it never cuts across text or cards
+const MOBILE_PATHS = {
+  bg: "M 8 0 C 16 130, 3 270, 8 410 C 16 550, 3 690, 8 830 C 16 920, 8 975, 8 1000",
+  dash: "M 10 0 C 18 130, 5 270, 10 410 C 18 550, 5 690, 10 830 C 18 920, 10 975, 10 1000",
+  core: "M 8 0 C 16 130, 3 270, 8 410 C 16 550, 3 690, 8 830 C 16 920, 8 975, 8 1000",
+};
+
 export default function CurvedScrollLine() {
   const containerRef = useRef(null);
   const mainPathRef = useRef(null);
   const dashPathRef = useRef(null);
+  const bgPathRef = useRef(null);
   const orbRef = useRef(null);
+
   const [activeWaypoints, setActiveWaypoints] = useState([]);
   const [waypointPositions, setWaypointPositions] = useState([]);
+  const [isMobile, setIsMobile] = useState(typeof window !== 'undefined' ? window.innerWidth <= 768 : false);
 
   useEffect(() => {
     const mainPath = mainPathRef.current;
@@ -29,34 +46,45 @@ export default function CurvedScrollLine() {
     const container = containerRef.current;
     if (!mainPath || !container) return;
 
-    const pathLength = mainPath.getTotalLength();
-
-    // Set initial stroke dasharray and dashoffset
-    gsap.set([mainPath, dashPath], {
-      strokeDasharray: pathLength,
-      strokeDashoffset: pathLength,
-    });
-
-    // Build cached lookup table of 300 points along path for O(1) instantaneous lookup
+    let pathLength = 0;
+    let pointCache = [];
     const SAMPLES = 300;
-    const pointCache = new Array(SAMPLES);
-    for (let i = 0; i < SAMPLES; i++) {
-      const p = i / (SAMPLES - 1);
-      const point = mainPath.getPointAtLength(p * pathLength);
-      pointCache[i] = {
-        xPct: (point.x / 100) * 100,
-        yPct: (point.y / 1000) * 100,
-      };
-    }
 
-    // Dynamic Waypoint Position Calculator based on section header tops
+    const setupPath = () => {
+      const mobileCheck = window.innerWidth <= 768;
+      setIsMobile(mobileCheck);
+
+      const paths = mobileCheck ? MOBILE_PATHS : DESKTOP_PATHS;
+      if (bgPathRef.current) bgPathRef.current.setAttribute('d', paths.bg);
+      if (dashPathRef.current) dashPathRef.current.setAttribute('d', paths.dash);
+      if (mainPathRef.current) mainPathRef.current.setAttribute('d', paths.core);
+
+      pathLength = mainPath.getTotalLength();
+
+      gsap.set([mainPath, dashPath], {
+        strokeDasharray: pathLength,
+        strokeDashoffset: pathLength,
+      });
+
+      pointCache = new Array(SAMPLES);
+      for (let i = 0; i < SAMPLES; i++) {
+        const p = i / (SAMPLES - 1);
+        const point = mainPath.getPointAtLength(p * pathLength);
+        pointCache[i] = {
+          xPct: (point.x / 100) * 100,
+          yPct: (point.y / 1000) * 100,
+        };
+      }
+    };
+
+    setupPath();
+
     const computeWaypoints = () => {
       const docHeight = document.documentElement.scrollHeight;
       return SECTION_DEFS.map((sec) => {
         let progress = sec.fallbackRatio;
         const el = document.getElementById(sec.id);
         if (el && docHeight > 0) {
-          // Align with section header top to remain clear of card content grids
           const top = el.offsetTop + 35;
           progress = Math.min(0.98, Math.max(0.02, top / docHeight));
         }
@@ -67,20 +95,19 @@ export default function CurvedScrollLine() {
         return {
           ...sec,
           progress,
-          pos: pointCache[sampleIdx] || pointCache[0],
+          pos: pointCache[sampleIdx] || pointCache[0] || { xPct: 50, yPct: 0 },
         };
       });
     };
 
-    const calculatedWaypoints = computeWaypoints();
+    let calculatedWaypoints = computeWaypoints();
     setWaypointPositions(calculatedWaypoints);
 
-    // Hardware accelerated GPU setter for leader orb
     const updateOrb = (xPct, yPct) => {
       if (!orb || !container) return;
       const rect = container.getBoundingClientRect();
       const xPx = (xPct / 100) * rect.width;
-      const yPx = (yPct / 1000) * 1000 * (rect.height / 1000);
+      const yPx = (yPct / 100) * rect.height;
       orb.style.transform = `translate3d(${xPx}px, ${yPx}px, 0)`;
     };
 
@@ -92,15 +119,13 @@ export default function CurvedScrollLine() {
       const p = Math.max(0, Math.min(1, currentProgress));
       const drawOffset = pathLength * (1 - p);
 
-      // Directly update CSS properties on frame
       mainPath.style.strokeDashoffset = `${drawOffset}px`;
       if (dashPath) dashPath.style.strokeDashoffset = `${drawOffset}px`;
 
       const sampleIdx = Math.min(SAMPLES - 1, Math.floor(p * (SAMPLES - 1)));
-      const point = pointCache[sampleIdx] || pointCache[0];
+      const point = pointCache[sampleIdx] || pointCache[0] || { xPct: 50, yPct: 0 };
       updateOrb(point.xPct, point.yPct);
 
-      // Determine active waypoints passed
       const activeList = [];
       calculatedWaypoints.forEach((wp, idx) => {
         if (p >= wp.progress - 0.02) {
@@ -124,10 +149,21 @@ export default function CurvedScrollLine() {
       },
     });
 
-    // Initial render call
+    const handleResize = () => {
+      setupPath();
+      calculatedWaypoints = computeWaypoints();
+      setWaypointPositions(calculatedWaypoints);
+      render();
+    };
+
+    window.addEventListener('resize', handleResize);
+    ScrollTrigger.addEventListener('refresh', handleResize);
+
     render();
 
     return () => {
+      window.removeEventListener('resize', handleResize);
+      ScrollTrigger.removeEventListener('refresh', handleResize);
       trigger.kill();
     };
   }, []);
@@ -141,7 +177,6 @@ export default function CurvedScrollLine() {
         aria-hidden="true"
       >
         <defs>
-          {/* Cyberpunk Sage Energy Gradient */}
           <linearGradient id="cyber-line-grad" x1="0%" y1="0%" x2="0%" y2="100%">
             <stop offset="0%" stopColor="#b7e4c7" stopOpacity="1" />
             <stop offset="25%" stopColor="#74c69d" stopOpacity="0.9" />
@@ -150,7 +185,6 @@ export default function CurvedScrollLine() {
             <stop offset="100%" stopColor="#d8f3dc" stopOpacity="1" />
           </linearGradient>
 
-          {/* Clean Robust SVG Glow Filter */}
           <filter id="cyber-line-glow" x="-20%" y="-20%" width="140%" height="140%">
             <feGaussianBlur stdDeviation="4" result="blur" />
             <feMerge>
@@ -160,28 +194,25 @@ export default function CurvedScrollLine() {
           </filter>
         </defs>
 
-        {/* Faint Background Guide Track */}
         <path
-          d="M 50 0 C 94 130, 6 270, 50 410 C 94 550, 6 690, 50 830 C 94 920, 50 975, 50 1000"
+          ref={bgPathRef}
+          d={isMobile ? MOBILE_PATHS.bg : DESKTOP_PATHS.bg}
           className="scroll-path-bg"
         />
 
-        {/* Parallel Tech-Dashed Companion Line */}
         <path
           ref={dashPathRef}
-          d="M 52.5 0 C 96.5 130, 8.5 270, 52.5 410 C 96.5 550, 8.5 690, 52.5 830 C 96.5 920, 52.5 975, 52.5 1000"
+          d={isMobile ? MOBILE_PATHS.dash : DESKTOP_PATHS.dash}
           className="scroll-path-dashed"
         />
 
-        {/* Main Glowing Energy Core Path */}
         <path
           ref={mainPathRef}
-          d="M 50 0 C 94 130, 6 270, 50 410 C 94 550, 6 690, 50 830 C 94 920, 50 975, 50 1000"
+          d={isMobile ? MOBILE_PATHS.core : DESKTOP_PATHS.core}
           className="scroll-path-core"
         />
       </svg>
 
-      {/* Section Milestone Waypoint Nodes */}
       {waypointPositions.map((wp, idx) => (
         <div
           key={wp.label}
@@ -197,7 +228,6 @@ export default function CurvedScrollLine() {
         </div>
       ))}
 
-      {/* Hardware-Accelerated Plasma Leader Orb */}
       <div ref={orbRef} className="scroll-plasma-orb">
         <span className="orb-core"></span>
         <span className="orb-ring"></span>
@@ -205,3 +235,4 @@ export default function CurvedScrollLine() {
     </div>
   );
 }
+

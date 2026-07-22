@@ -8,124 +8,133 @@ export default function FluidSimulation() {
     const canvas = canvasRef.current;
     if (!canvas) return;
 
-    // Check for WebGL support
-    const gl = canvas.getContext('webgl') || canvas.getContext('experimental-webgl');
-    if (!gl) {
-      console.warn('WebGL not supported; fluid simulation disabled.');
-      return;
-    }
-
     let fluidInstance = null;
+    let resizeObserver = null;
+    let removeListeners = null;
 
-    try {
-      fluidInstance = WebGLFluid(canvas, {
-        IMMEDIATE: true,
-        TRIGGER: 'hover',
-        AUTO: false,
-        SIM_RESOLUTION: 64,
-        DYE_RESOLUTION: 512,
-        CAPTURE_RESOLUTION: 256,
-        DENSITY_DISSIPATION: 3.5,
-        VELOCITY_DISSIPATION: 0.9,
-        PRESSURE: 0.8,
-        PRESSURE_ITERATIONS: 10,
-        CURL: 20,
-        SPLAT_RADIUS: 0.22,
-        SPLAT_FORCE: 2500,
-        SPLAT_COUNT: 2,
-        SHADING: true,
-        COLORFUL: true,
-        COLOR_UPDATE_SPEED: 8,
-        PAUSED: false,
-        BACK_COLOR: { r: 0, g: 0, b: 0 },
-        TRANSPARENT: true,
-        BLOOM: true,
-        BLOOM_ITERATIONS: 3,
-        BLOOM_RESOLUTION: 128,
-        BLOOM_INTENSITY: 0.15,
-        BLOOM_THRESHOLD: 0.7,
-        BLOOM_SOFT_KNEE: 0.7,
-        SUNRAYS: false,
-      });
-    } catch (err) {
-      console.error('Error initializing WebGL Fluid Simulation:', err);
-    }
-
-    // Keep canvas pixel size matched with element layout
-    const updateCanvasSize = () => {
-      if (canvas && (canvas.width !== canvas.clientWidth || canvas.height !== canvas.clientHeight)) {
-        canvas.width = canvas.clientWidth;
-        canvas.height = canvas.clientHeight;
-      }
-    };
-    updateCanvasSize();
-
-    const resizeObserver = new ResizeObserver(updateCanvasSize);
-    resizeObserver.observe(canvas);
-
-    // Forward pointer events to canvas ONLY when cursor is within canvas bounding box
-    const forwardPointerEvent = (type, clientX, clientY) => {
-      if (!canvas) return;
-      const rect = canvas.getBoundingClientRect();
-
-      // Stop tracking if cursor is outside canvas bounds (e.g. scrolled past About section)
-      if (
-        clientX < rect.left ||
-        clientX > rect.right ||
-        clientY < rect.top ||
-        clientY > rect.bottom
-      ) {
+    const initFluid = () => {
+      // Disable WebGL fluid simulation on mobile devices (<= 768px) to save CPU/GPU and battery
+      if (window.innerWidth <= 768) {
+        if (fluidInstance && typeof fluidInstance.destroy === 'function') {
+          fluidInstance.destroy();
+          fluidInstance = null;
+        }
         return;
       }
 
-      const offsetX = clientX - rect.left;
-      const offsetY = clientY - rect.top;
+      if (fluidInstance) return;
 
-      const evt = new MouseEvent(type, {
-        clientX: offsetX,
-        clientY: offsetY,
-        bubbles: false,
-        cancelable: true,
-      });
-      Object.defineProperty(evt, 'offsetX', { get: () => offsetX });
-      Object.defineProperty(evt, 'offsetY', { get: () => offsetY });
-      canvas.dispatchEvent(evt);
+      // Check for WebGL support
+      const gl = canvas.getContext('webgl') || canvas.getContext('experimental-webgl');
+      if (!gl) {
+        console.warn('WebGL not supported; fluid simulation disabled.');
+        return;
+      }
+
+      try {
+        fluidInstance = WebGLFluid(canvas, {
+          IMMEDIATE: true,
+          TRIGGER: 'hover',
+          AUTO: false,
+          SIM_RESOLUTION: 64,
+          DYE_RESOLUTION: 512,
+          CAPTURE_RESOLUTION: 256,
+          DENSITY_DISSIPATION: 3.5,
+          VELOCITY_DISSIPATION: 0.9,
+          PRESSURE: 0.8,
+          PRESSURE_ITERATIONS: 10,
+          CURL: 20,
+          SPLAT_RADIUS: 0.22,
+          SPLAT_FORCE: 2500,
+          SPLAT_COUNT: 2,
+          SHADING: true,
+          COLORFUL: true,
+          COLOR_UPDATE_SPEED: 8,
+          PAUSED: false,
+          BACK_COLOR: { r: 0, g: 0, b: 0 },
+          TRANSPARENT: true,
+          BLOOM: true,
+          BLOOM_ITERATIONS: 3,
+          BLOOM_RESOLUTION: 128,
+          BLOOM_INTENSITY: 0.15,
+          BLOOM_THRESHOLD: 0.7,
+          BLOOM_SOFT_KNEE: 0.7,
+          SUNRAYS: false,
+        });
+      } catch (err) {
+        console.error('Error initializing WebGL Fluid Simulation:', err);
+      }
+
+      const updateCanvasSize = () => {
+        if (canvas && (canvas.width !== canvas.clientWidth || canvas.height !== canvas.clientHeight)) {
+          canvas.width = canvas.clientWidth;
+          canvas.height = canvas.clientHeight;
+        }
+      };
+      updateCanvasSize();
+
+      resizeObserver = new ResizeObserver(updateCanvasSize);
+      resizeObserver.observe(canvas);
+
+      const forwardPointerEvent = (type, clientX, clientY) => {
+        if (!canvas) return;
+        const rect = canvas.getBoundingClientRect();
+
+        if (
+          clientX < rect.left ||
+          clientX > rect.right ||
+          clientY < rect.top ||
+          clientY > rect.bottom
+        ) {
+          return;
+        }
+
+        const offsetX = clientX - rect.left;
+        const offsetY = clientY - rect.top;
+
+        const evt = new MouseEvent(type, {
+          clientX: offsetX,
+          clientY: offsetY,
+          bubbles: false,
+          cancelable: true,
+        });
+        Object.defineProperty(evt, 'offsetX', { get: () => offsetX });
+        Object.defineProperty(evt, 'offsetY', { get: () => offsetY });
+        canvas.dispatchEvent(evt);
+      };
+
+      const handleWindowMouseMove = (e) => forwardPointerEvent('mousemove', e.clientX, e.clientY);
+      const handleWindowMouseDown = (e) => forwardPointerEvent('mousedown', e.clientX, e.clientY);
+
+      window.addEventListener('mousemove', handleWindowMouseMove, { passive: true });
+      window.addEventListener('mousedown', handleWindowMouseDown, { passive: true });
+
+      removeListeners = () => {
+        window.removeEventListener('mousemove', handleWindowMouseMove);
+        window.removeEventListener('mousedown', handleWindowMouseDown);
+        if (resizeObserver) resizeObserver.disconnect();
+      };
     };
 
-    const handleWindowMouseMove = (e) => {
-      forwardPointerEvent('mousemove', e.clientX, e.clientY);
-    };
+    initFluid();
 
-    const handleWindowMouseDown = (e) => {
-      forwardPointerEvent('mousedown', e.clientX, e.clientY);
-    };
-
-    const handleWindowTouchMove = (e) => {
-      if (e.touches && e.touches.length > 0) {
-        const touch = e.touches[0];
-        forwardPointerEvent('mousemove', touch.clientX, touch.clientY);
+    const handleResize = () => {
+      if (window.innerWidth <= 768) {
+        if (removeListeners) removeListeners();
+        if (fluidInstance && typeof fluidInstance.destroy === 'function') {
+          fluidInstance.destroy();
+          fluidInstance = null;
+        }
+      } else {
+        initFluid();
       }
     };
 
-    const handleWindowTouchStart = (e) => {
-      if (e.touches && e.touches.length > 0) {
-        const touch = e.touches[0];
-        forwardPointerEvent('mousedown', touch.clientX, touch.clientY);
-      }
-    };
-
-    window.addEventListener('mousemove', handleWindowMouseMove, { passive: true });
-    window.addEventListener('mousedown', handleWindowMouseDown, { passive: true });
-    window.addEventListener('touchmove', handleWindowTouchMove, { passive: true });
-    window.addEventListener('touchstart', handleWindowTouchStart, { passive: true });
+    window.addEventListener('resize', handleResize);
 
     return () => {
-      resizeObserver.disconnect();
-      window.removeEventListener('mousemove', handleWindowMouseMove);
-      window.removeEventListener('mousedown', handleWindowMouseDown);
-      window.removeEventListener('touchmove', handleWindowTouchMove);
-      window.removeEventListener('touchstart', handleWindowTouchStart);
-
+      window.removeEventListener('resize', handleResize);
+      if (removeListeners) removeListeners();
       if (fluidInstance && typeof fluidInstance.destroy === 'function') {
         fluidInstance.destroy();
       }
@@ -140,3 +149,4 @@ export default function FluidSimulation() {
     />
   );
 }
+

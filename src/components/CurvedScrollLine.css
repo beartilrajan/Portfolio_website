@@ -170,15 +170,58 @@
   }
 }
 
-/* Responsive Hide/Scale */
+/* Responsive Hide/Scale & Mobile Performance Optimizations */
 @media (max-width: 900px) {
   .waypoint-label {
-    display: none;
+    display: none !important;
   }
 }
 
-@media (max-width: 640px) {
+@media (max-width: 768px) {
   .curved-scroll-line-container {
-    opacity: 0.35;
+    opacity: 0.75;
+  }
+
+  /* Replace heavy SVG filter with lightweight hardware-accelerated CSS drop-shadow on mobile */
+  .scroll-path-core {
+    stroke-width: 2.5;
+    filter: drop-shadow(0 0 5px rgba(149, 213, 178, 0.7)) !important;
+  }
+
+  .scroll-path-dashed {
+    stroke-width: 1;
+    filter: none;
+  }
+
+  .scroll-path-bg {
+    stroke-width: 1.5;
+  }
+
+  .scroll-plasma-orb {
+    width: 10px;
+    height: 10px;
+    margin-left: -5px;
+    margin-top: -5px;
+  }
+
+  .orb-core {
+    box-shadow: 0 0 8px #ffffff, 0 0 16px #95d5b2, 0 0 30px #52b788;
+  }
+
+  .orb-ring {
+    inset: -5px;
+    border-width: 1.2px;
+  }
+
+  .waypoint-core {
+    width: 8px;
+    height: 8px;
+  }
+
+  .waypoint-pulse-ring {
+    left: 4px;
+    width: 16px;
+    height: 16px;
   }
 }
+

@@ -100,6 +100,12 @@ body::before {
   -webkit-mask-image: linear-gradient(to bottom, rgba(0, 0, 0, 1) 0%, rgba(0, 0, 0, 1) 70%, rgba(0, 0, 0, 0) 100%);
 }
 
+@media (max-width: 768px) {
+  .fluid-canvas {
+    display: none !important;
+  }
+}
+
 /* Subtle background grid pattern */
 .bg-grid-overlay {
   position: fixed;
@@ -112,6 +118,7 @@ body::before {
   z-index: 0;
   mask-image: radial-gradient(circle at center, black 40%, transparent 90%);
 }
+
 
 /* Typography Helpers */
 h1, h2, h3, h4, h5, h6 {
