@@ -8,7 +8,7 @@
   pointer-events: none;
   z-index: 1;
   overflow: hidden;
-  opacity: 0.75;
+  opacity: 0.65;
 }
 
 .curved-scroll-svg {
@@ -20,19 +20,19 @@
 /* Faint Background Guide Track */
 .scroll-path-bg {
   fill: none;
-  stroke: rgba(149, 213, 178, 0.12);
-  stroke-width: 3;
+  stroke: rgba(149, 213, 178, 0.1);
+  stroke-width: 2.5;
   stroke-linecap: round;
 }
 
 /* Parallel Tech-Dashed Companion Line */
 .scroll-path-dashed {
   fill: none;
-  stroke: rgba(183, 228, 199, 0.45);
-  stroke-width: 1.8;
+  stroke: rgba(183, 228, 199, 0.35);
+  stroke-width: 1.5;
   stroke-dasharray: 6 12;
   stroke-linecap: round;
-  filter: drop-shadow(0 0 6px rgba(149, 213, 178, 0.4));
+  filter: drop-shadow(0 0 6px rgba(149, 213, 178, 0.3));
   will-change: stroke-dashoffset;
 }
 
@@ -62,7 +62,8 @@
   height: 10px;
   border-radius: 50%;
   background: var(--bg-dark);
-  border: 2px solid rgba(149, 213, 178, 0.3);
+  border: 2px solid rgba(149, 213, 178, 0.4);
+  box-shadow: 0 0 8px rgba(0, 0, 0, 0.8);
   transition: background 0.4s ease, border-color 0.4s ease, transform 0.4s ease, box-shadow 0.4s ease;
 }
 
@@ -86,9 +87,15 @@
   letter-spacing: 0.08em;
   text-transform: uppercase;
   color: var(--text-muted);
-  opacity: 0.4;
+  background: rgba(8, 13, 10, 0.85);
+  border: 1px solid var(--border-subtle);
+  padding: 0.2rem 0.6rem;
+  border-radius: var(--radius-pill);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  opacity: 0.5;
   transform: translateX(-4px);
-  transition: color 0.4s ease, opacity 0.4s ease, transform 0.4s ease;
+  transition: color 0.4s ease, opacity 0.4s ease, transform 0.4s ease, border-color 0.4s ease, box-shadow 0.4s ease;
   white-space: nowrap;
 }
 
@@ -97,7 +104,7 @@
   background: var(--sage-accent);
   border-color: var(--sage-light);
   transform: scale(1.25);
-  box-shadow: 0 0 12px var(--sage-accent), 0 0 24px rgba(149, 213, 178, 0.6);
+  box-shadow: 0 0 12px var(--sage-accent), 0 0 24px rgba(149, 213, 178, 0.8);
 }
 
 .waypoint-node.active .waypoint-pulse-ring {
@@ -108,8 +115,10 @@
 
 .waypoint-node.active .waypoint-label {
   color: var(--sage-accent);
+  border-color: var(--border-active);
   opacity: 1;
   transform: translateX(0);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5), 0 0 14px rgba(149, 213, 178, 0.25);
   text-shadow: 0 0 10px rgba(149, 213, 178, 0.4);
 }
 

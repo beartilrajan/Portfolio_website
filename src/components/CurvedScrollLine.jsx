@@ -5,13 +5,13 @@ import './CurvedScrollLine.css';
 
 gsap.registerPlugin(ScrollTrigger);
 
-// Waypoints corresponding to section scroll positions
-const WAYPOINTS = [
-  { progress: 0.08, label: 'Hero' },
-  { progress: 0.30, label: 'About' },
-  { progress: 0.55, label: 'Projects' },
-  { progress: 0.76, label: 'Skills' },
-  { progress: 0.95, label: 'Contact' },
+// Waypoints corresponding to sections
+const SECTION_DEFS = [
+  { id: 'hero', label: 'Hero', fallbackRatio: 0.08 },
+  { id: 'about', label: 'About', fallbackRatio: 0.28 },
+  { id: 'projects', label: 'Projects', fallbackRatio: 0.52 },
+  { id: 'skills', label: 'Skills', fallbackRatio: 0.74 },
+  { id: 'contact', label: 'Contact', fallbackRatio: 0.94 },
 ];
 
 export default function CurvedScrollLine() {
@@ -49,17 +49,30 @@ export default function CurvedScrollLine() {
       };
     }
 
-    // Precalculate waypoint locations along path
-    const calculatedWaypoints = WAYPOINTS.map((wp) => {
-      const sampleIdx = Math.min(
-        SAMPLES - 1,
-        Math.max(0, Math.floor(wp.progress * (SAMPLES - 1)))
-      );
-      return {
-        ...wp,
-        pos: pointCache[sampleIdx],
-      };
-    });
+    // Dynamic Waypoint Position Calculator based on section header tops
+    const computeWaypoints = () => {
+      const docHeight = document.documentElement.scrollHeight;
+      return SECTION_DEFS.map((sec) => {
+        let progress = sec.fallbackRatio;
+        const el = document.getElementById(sec.id);
+        if (el && docHeight > 0) {
+          // Align with section header top to remain clear of card content grids
+          const top = el.offsetTop + 35;
+          progress = Math.min(0.98, Math.max(0.02, top / docHeight));
+        }
+        const sampleIdx = Math.min(
+          SAMPLES - 1,
+          Math.max(0, Math.floor(progress * (SAMPLES - 1)))
+        );
+        return {
+          ...sec,
+          progress,
+          pos: pointCache[sampleIdx] || pointCache[0],
+        };
+      });
+    };
+
+    const calculatedWaypoints = computeWaypoints();
     setWaypointPositions(calculatedWaypoints);
 
     // Hardware accelerated GPU setter for leader orb
@@ -89,7 +102,7 @@ export default function CurvedScrollLine() {
 
       // Determine active waypoints passed
       const activeList = [];
-      WAYPOINTS.forEach((wp, idx) => {
+      calculatedWaypoints.forEach((wp, idx) => {
         if (p >= wp.progress - 0.02) {
           activeList.push(idx);
         }

@@ -1,8 +1,9 @@
 import React, { useEffect, useRef } from 'react';
 import { gsap } from 'gsap';
-import { ArrowRight, Mail, Sparkles, Terminal } from 'lucide-react';
+import { ArrowRight, Mail, Sparkles } from 'lucide-react';
 import { GithubIcon, LinkedinIcon, YoutubeIcon } from './SocialIcons';
 import { personalInfo } from '../data/portfolioData';
+import profileImg from '../assets/profile.jpg';
 import './Hero.css';
 
 export default function Hero() {
@@ -42,8 +43,8 @@ export default function Hero() {
         '-=0.35'
       );
 
-      // Continuous subtle ambient float animation for code card
-      gsap.to('.hero-code-card', {
+      // Continuous subtle ambient float animation for portrait card
+      gsap.to('.hero-portrait-card', {
         y: -8,
         duration: 3,
         repeat: -1,
@@ -157,39 +158,39 @@ export default function Hero() {
           </div>
         </div>
 
-        {/* Decorative Code Artifact / Tech Snapshot */}
+        {/* Hero Profile Photo Card */}
         <div className="hero-visual">
-          <div className="glass-card hero-code-card">
-            <div className="code-card-header">
-              <div className="code-window-dots">
+          <div className="glass-card hero-portrait-card">
+            {/* Window Header Bar */}
+            <div className="portrait-header">
+              <div className="portrait-dots">
                 <span className="dot dot-red"></span>
                 <span className="dot dot-yellow"></span>
                 <span className="dot dot-green"></span>
               </div>
-              <div className="code-window-title">
-                <Terminal size={14} />
-                <span>developer.profile.js</span>
+              <span className="portrait-filename">profile.png</span>
+            </div>
+
+            {/* Inner Image Frame */}
+            <div className="portrait-frame">
+              {/* Corner Plus Accents */}
+              <span className="corner-plus top-left">+</span>
+              <span className="corner-plus top-right">+</span>
+
+              <div className="portrait-image-wrapper">
+                <img
+                  src={profileImg}
+                  alt="Beartil Rajan"
+                  className="hero-profile-img"
+                />
+                <div className="portrait-overlay-glow"></div>
               </div>
-              <span className="code-window-tag">React + WSL</span>
-            </div>
 
-            <div className="code-card-body">
-              <pre className="code-block">
-                <code>
-                  <span className="code-keyword">const</span> <span className="code-var">engineer</span> = &#123;<br />
-                  &nbsp;&nbsp;<span className="code-prop">name</span>: <span className="code-string">"{personalInfo.name}"</span>,<br />
-                  &nbsp;&nbsp;<span className="code-prop">degree</span>: <span className="code-string">"B.E. Computer Science"</span>,<br />
-                  &nbsp;&nbsp;<span className="code-prop">focus</span>: [<span className="code-string">"React & 3D Web"</span>, <span className="code-string">"Python Vision"</span>],<br />
-                  &nbsp;&nbsp;<span className="code-prop">stack</span>: [<span className="code-string">"WSL"</span>, <span className="code-string">"Cursor"</span>, <span className="code-string">"Copilot"</span>],<br />
-                  &nbsp;&nbsp;<span className="code-prop">goal</span>: <span className="code-string">"Aspiring Product Engineer"</span><br />
-                  &#125;;
-                </code>
-              </pre>
-            </div>
-
-            <div className="code-card-footer">
-              <Sparkles size={14} className="sparkle-icon" />
-              <span>Crafted with React, Vanilla CSS & Vite</span>
+              {/* Floating Bottom Status Pill */}
+              <div className="portrait-badge-pill">
+                <span className="badge-dot"></span>
+                <span className="badge-text">CS Engineer & Product Builder</span>
+              </div>
             </div>
           </div>
         </div>
