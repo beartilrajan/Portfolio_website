@@ -5,14 +5,7 @@ import { projects } from '../data/portfolioData';
 import './Projects.css';
 
 export default function Projects() {
-  const [activeCategory, setActiveCategory] = useState('All');
   const [selectedProject, setSelectedProject] = useState(null);
-
-  const categories = ['All', '3D & Web Apps', 'AI / Vision', 'Web Apps', 'Game Dev & AI'];
-
-  const filteredProjects = activeCategory === 'All'
-    ? projects
-    : projects.filter(p => p.category === activeCategory);
 
   return (
     <section id="projects" className="section projects-section">
@@ -26,22 +19,9 @@ export default function Projects() {
           </p>
         </div>
 
-        {/* Category Filters */}
-        <div className="project-categories reveal reveal-delay-1">
-          {categories.map((cat) => (
-            <button
-              key={cat}
-              onClick={() => setActiveCategory(cat)}
-              className={`category-btn ${activeCategory === cat ? 'active' : ''}`}
-            >
-              {cat}
-            </button>
-          ))}
-        </div>
-
         {/* Projects Cards Grid */}
         <div className="projects-grid">
-          {filteredProjects.map((project, idx) => (
+          {projects.map((project, idx) => (
             <div
               key={project.id}
               className={`glass-card project-card reveal reveal-delay-${(idx % 3) + 1}`}
