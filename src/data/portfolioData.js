@@ -41,25 +41,6 @@ export const focusAreas = [
 
 export const projects = [
   {
-    id: "room-layout-optimization",
-    title: "Room Layout Optimization",
-    subtitle: "3D Spatial Optimization Application",
-    category: "3D & Web Apps",
-    featured: true,
-    description: "A browser-based 3D spatial optimization application utilizing React and React Three Fiber to arrange furniture dynamically based on real-time comfort and spatial constraints.",
-    detailedDescription: "Built with React Three Fiber and Three.js to solve spatial arrangement challenges. Users can position furniture items in a 3D viewport, evaluate clearance zones, and calculate algorithmic comfort scores based on ergonomics and accessibility metrics.",
-    tags: ["React", "React Three Fiber", "Three.js", "JavaScript", "Tailwind CSS"],
-    github: "https://github.com/beartilrajan/room-layout-optimization",
-    live: "https://beartilrajan.github.io/room-layout-optimization",
-    metrics: "Interactive 3D Scene • Real-Time Constraint Solver",
-    highlights: [
-      "Real-time 3D room canvas rendering with orbit controls",
-      "Constraint evaluation engine calculating furniture clearance",
-      "Custom drag-and-rotate spatial manipulator",
-      "Distraction-free controls with modern CSS styling"
-    ]
-  },
-  {
     id: "gesturex",
     title: "GestureX",
     subtitle: "Touchless Gesture-Control Interface",
@@ -79,30 +60,11 @@ export const projects = [
     ]
   },
   {
-    id: "ai-markdown-editor",
-    title: "AI-Powered Markdown Editor",
-    subtitle: "Distraction-Free Writing Application",
-    category: "Web Apps",
-    featured: true,
-    description: "A distraction-free markdown writing application initialized in a Linux (WSL) environment featuring live preview, custom themes, and fast parsing.",
-    detailedDescription: "Designed for technical writers and developers. Initialized inside WSL using React and Vite, utilizing the marked package for instant HTML rendering, local file export, and clean typography.",
-    tags: ["React", "Vite", "marked", "JavaScript", "WSL"],
-    github: "https://github.com/beartilrajan/ai-markdown-editor",
-    live: "https://beartilrajan.github.io/ai-markdown-editor",
-    metrics: "Instant Live Preview • WSL Environment",
-    highlights: [
-      "Split-pane live Markdown parsing via marked package",
-      "Initialized and developed inside WSL (Windows Subsystem for Linux)",
-      "One-click Markdown file download & copy formatted HTML",
-      "Clean dark mode optimized for long writing sessions"
-    ]
-  },
-  {
     id: "weather-app",
     title: "Responsive Weather App",
     subtitle: "Real-Time Front-End Forecast App",
     category: "Web Apps",
-    featured: false,
+    featured: true,
     description: "A responsive front-end weather application fetching real-time meteorological data via async/await and Open-Meteo API, deployed on GitHub Pages.",
     detailedDescription: "Built with pure Vanilla JavaScript to master asynchronous data fetching, DOM manipulation, error handling, and responsive layout styling without external libraries.",
     tags: ["Vanilla JS", "Async/Await", "Open-Meteo API", "HTML5/CSS3", "GitHub Pages"],
@@ -114,24 +76,6 @@ export const projects = [
       "Dynamic weather status UI based on WMO weather codes",
       "Zero build step Vanilla JS architecture",
       "Deployed directly via GitHub Pages"
-    ]
-  },
-  {
-    id: "unity-3d-game-challenge",
-    title: "Unity 3D Game Challenge",
-    subtitle: "AI Scripting & Dev Vlog Experiment",
-    category: "Game Dev & AI",
-    featured: false,
-    description: "A 3D game built in Unity 6.4 testing AI-driven script generation (Ollama/LLMs) for an upcoming technical video vlog on YouTube.",
-    detailedDescription: "Combines game development and AI experimentations. Built in Unity 6.4 using C# scripts generated and refined through local Ollama LLM prompts to accelerate mechanics development.",
-    tags: ["Unity 6.4", "C#", "Ollama / AI", "3D Engine", "Dev Vlog"],
-    github: "https://github.com/beartilrajan/unity-3d-game-challenge",
-    live: "https://youtube.com/@RaydthBuilds",
-    metrics: "Unity 6.4 Engine • AI-Assisted C# Scripts",
-    highlights: [
-      "AI-driven C# player controller & game loop generation",
-      "3D physics environment built in Unity 6.4",
-      "Documented step-by-step for YouTube RaydthBuilds channel"
     ]
   }
 ];

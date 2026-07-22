@@ -64,6 +64,14 @@ export default function Hero() {
     }
   };
 
+  const handleScrollToContact = (e) => {
+    e.preventDefault();
+    const contactSection = document.getElementById('contact');
+    if (contactSection) {
+      contactSection.scrollIntoView({ behavior: 'smooth' });
+    }
+  };
+
   return (
     <section id="hero" ref={heroRef} className="hero-section">
       <div className="container hero-container">
@@ -102,7 +110,8 @@ export default function Hero() {
             </a>
 
             <a
-              href={`mailto:${personalInfo.email}`}
+              href="#contact"
+              onClick={handleScrollToContact}
               className="btn btn-secondary"
             >
               <Mail size={18} />

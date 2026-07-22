@@ -130,16 +130,16 @@ export default function CurvedScrollLine() {
         <defs>
           {/* Cyberpunk Sage Energy Gradient */}
           <linearGradient id="cyber-line-grad" x1="0%" y1="0%" x2="0%" y2="100%">
-            <stop offset="0%" stopColor="#95d5b2" stopOpacity="0.95" />
-            <stop offset="25%" stopColor="#52b788" stopOpacity="0.85" />
-            <stop offset="50%" stopColor="#2d6a4f" stopOpacity="0.8" />
-            <stop offset="75%" stopColor="#74c69d" stopOpacity="0.9" />
-            <stop offset="100%" stopColor="#95d5b2" stopOpacity="1" />
+            <stop offset="0%" stopColor="#b7e4c7" stopOpacity="1" />
+            <stop offset="25%" stopColor="#74c69d" stopOpacity="0.9" />
+            <stop offset="50%" stopColor="#52b788" stopOpacity="0.85" />
+            <stop offset="75%" stopColor="#95d5b2" stopOpacity="0.95" />
+            <stop offset="100%" stopColor="#d8f3dc" stopOpacity="1" />
           </linearGradient>
 
-          {/* Soft Glow Filter */}
+          {/* Clean Robust SVG Glow Filter */}
           <filter id="cyber-line-glow" x="-20%" y="-20%" width="140%" height="140%">
-            <feGaussianBlur stdDeviation="3" result="blur" />
+            <feGaussianBlur stdDeviation="4" result="blur" />
             <feMerge>
               <feMergeNode in="blur" />
               <feMergeNode in="SourceGraphic" />
