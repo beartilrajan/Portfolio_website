@@ -172,7 +172,7 @@ export default function Hero() {
                   &nbsp;&nbsp;<span className="code-prop">degree</span>: <span className="code-string">"B.E. Computer Science"</span>,<br />
                   &nbsp;&nbsp;<span className="code-prop">focus</span>: [<span className="code-string">"React & 3D Web"</span>, <span className="code-string">"Python Vision"</span>],<br />
                   &nbsp;&nbsp;<span className="code-prop">stack</span>: [<span className="code-string">"WSL"</span>, <span className="code-string">"Cursor"</span>, <span className="code-string">"Copilot"</span>],<br />
-                  &nbsp;&nbsp;<span className="code-prop">goal</span>: <span className="code-string">"Building a Tech Startup"</span><br />
+                  &nbsp;&nbsp;<span className="code-prop">goal</span>: <span className="code-string">"Aspiring Product Engineer"</span><br />
                   &#125;;
                 </code>
               </pre>

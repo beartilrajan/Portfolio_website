@@ -46,7 +46,7 @@ export default function Footer() {
         <div className="footer-center">
           <div className="time-badge">
             <span className="time-dot"></span>
-            <span className="time-text">CS Engineer & Startup Founder • {timeString || 'Active Routine'}</span>
+            <span className="time-text">CS Engineer & Product Engineer • {timeString || 'Active Routine'}</span>
           </div>
         </div>
 

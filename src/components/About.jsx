@@ -44,7 +44,7 @@ export default function About() {
               </div>
               <div className="about-bullet-item">
                 <CheckCircle2 size={18} className="bullet-icon" />
-                <span>Aspiring Tech Entrepreneur</span>
+                <span>Aspiring Product Engineer</span>
               </div>
               <div className="about-bullet-item">
                 <CheckCircle2 size={18} className="bullet-icon" />

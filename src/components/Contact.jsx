@@ -22,7 +22,7 @@ export default function Contact() {
     setFormStatus('sending');
 
     try {
-      const response = await fetch(`https://formsubmit.co/ajax/${personalInfo.email}`, {
+      const response = await fetch(personalInfo.formspreeEndpoint || 'https://formspree.io/f/maqrbrzg', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -32,22 +32,18 @@ export default function Contact() {
           name: formData.name,
           email: formData.email,
           message: formData.message,
-          _subject: `New Portfolio Message from ${formData.name}`,
-          _template: 'table',
-          _captcha: 'false'
+          _subject: `New Portfolio Message from ${formData.name}`
         })
       });
 
-      const data = await response.json().catch(() => ({}));
-
-      if (response.ok && data.success !== 'false') {
+      if (response.ok) {
         setFormStatus('success');
         setFormData({ name: '', email: '', message: '' });
       } else {
         triggerMailto();
       }
     } catch (err) {
-      console.error('Email submission error:', err);
+      console.error('Formspree submission error:', err);
       triggerMailto();
     }
   };
