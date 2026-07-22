@@ -1,27 +1,39 @@
 import { useEffect } from 'react';
+import { gsap } from 'gsap';
+import { ScrollTrigger } from 'gsap/ScrollTrigger';
+
+gsap.registerPlugin(ScrollTrigger);
 
 /**
- * Custom hook to initialize IntersectionObserver for elements with the .reveal class.
+ * Custom hook to initialize GSAP ScrollTrigger animations for elements with the .reveal class.
  */
 export function useScrollReveal() {
   useEffect(() => {
     const revealElements = document.querySelectorAll('.reveal');
-    revealElements.forEach((el) => el.classList.add('active'));
 
-    if (typeof window !== 'undefined' && 'IntersectionObserver' in window) {
-      const observer = new IntersectionObserver(
-        (entries) => {
-          entries.forEach((entry) => {
-            if (entry.isIntersecting) {
-              entry.target.classList.add('active');
-            }
-          });
-        },
-        { threshold: 0.05 }
+    revealElements.forEach((el) => {
+      // Add initial inline fallback
+      el.classList.add('active');
+
+      gsap.fromTo(
+        el,
+        { opacity: 0, y: 35 },
+        {
+          opacity: 1,
+          y: 0,
+          duration: 0.8,
+          ease: 'power3.out',
+          scrollTrigger: {
+            trigger: el,
+            start: 'top 88%',
+            toggleActions: 'play none none none',
+          },
+        }
       );
+    });
 
-      revealElements.forEach((el) => observer.observe(el));
-      return () => observer.disconnect();
-    }
+    return () => {
+      ScrollTrigger.getAll().forEach((trigger) => trigger.kill());
+    };
   }, []);
 }

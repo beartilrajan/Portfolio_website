@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import Navbar from './components/Navbar';
 import Hero from './components/Hero';
 import About from './components/About';
@@ -7,15 +7,21 @@ import Skills from './components/Skills';
 import Contact from './components/Contact';
 import Footer from './components/Footer';
 import FluidSimulation from './components/FluidSimulation';
+import Preloader from './components/Preloader';
 import { useScrollReveal } from './hooks/useScrollReveal';
 import './index.css';
 
 export default function App() {
-  // Initialize IntersectionObserver scroll reveals
+  const [isLoading, setIsLoading] = useState(true);
+
+  // Initialize GSAP ScrollTrigger scroll reveals
   useScrollReveal();
 
   return (
     <div className="portfolio-app">
+      {/* Loading Scene */}
+      {isLoading && <Preloader onComplete={() => setIsLoading(false)} />}
+
       {/* Background Subtle Grid Layer */}
       <div className="bg-grid-overlay"></div>
 

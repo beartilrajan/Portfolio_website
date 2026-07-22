@@ -1,10 +1,61 @@
-import React from 'react';
+import React, { useEffect, useRef } from 'react';
+import { gsap } from 'gsap';
 import { ArrowRight, Mail, Sparkles, Terminal } from 'lucide-react';
 import { GithubIcon, LinkedinIcon, YoutubeIcon } from './SocialIcons';
 import { personalInfo } from '../data/portfolioData';
 import './Hero.css';
 
 export default function Hero() {
+  const heroRef = useRef(null);
+
+  useEffect(() => {
+    const ctx = gsap.context(() => {
+      const tl = gsap.timeline({ delay: 0.15 });
+
+      tl.fromTo(
+        '.hero-status-pill',
+        { opacity: 0, y: 25 },
+        { opacity: 1, y: 0, duration: 0.65, ease: 'power3.out' }
+      )
+      .fromTo(
+        '.hero-title',
+        { opacity: 0, y: 35 },
+        { opacity: 1, y: 0, duration: 0.75, ease: 'power3.out' },
+        '-=0.45'
+      )
+      .fromTo(
+        '.hero-description',
+        { opacity: 0, y: 25 },
+        { opacity: 1, y: 0, duration: 0.65, ease: 'power3.out' },
+        '-=0.45'
+      )
+      .fromTo(
+        '.hero-actions',
+        { opacity: 0, y: 25 },
+        { opacity: 1, y: 0, duration: 0.65, ease: 'power3.out' },
+        '-=0.45'
+      )
+      .fromTo(
+        '.hero-visual',
+        { opacity: 0, scale: 0.9, y: 35 },
+        { opacity: 1, scale: 1, y: 0, duration: 0.85, ease: 'back.out(1.2)' },
+        '-=0.55'
+      );
+
+      // Continuous subtle ambient float animation for code card
+      gsap.to('.hero-code-card', {
+        y: -10,
+        duration: 3.5,
+        repeat: -1,
+        yoyo: true,
+        ease: 'sine.inOut',
+        delay: 1.2,
+      });
+    }, heroRef);
+
+    return () => ctx.revert();
+  }, []);
+
   const handleScrollToProjects = (e) => {
     e.preventDefault();
     const projectsSection = document.getElementById('projects');
@@ -14,7 +65,7 @@ export default function Hero() {
   };
 
   return (
-    <section id="hero" className="hero-section">
+    <section id="hero" ref={heroRef} className="hero-section">
       <div className="container hero-container">
         {/* Entrance Container with Staggered Keyframes */}
         <div className="hero-content">
