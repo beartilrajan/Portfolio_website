@@ -6,6 +6,7 @@ import Projects from './components/Projects';
 import Skills from './components/Skills';
 import Contact from './components/Contact';
 import Footer from './components/Footer';
+import FluidSimulation from './components/FluidSimulation';
 import { useScrollReveal } from './hooks/useScrollReveal';
 import './index.css';
 
@@ -23,8 +24,12 @@ export default function App() {
 
       {/* Main Sections */}
       <main>
-        <Hero />
-        <About />
+        {/* Hero & About sections with interactive fluid background layer */}
+        <div className="fluid-hero-about-wrapper">
+          <FluidSimulation />
+          <Hero />
+          <About />
+        </div>
         <Projects />
         <Skills />
         <Contact />
