@@ -1,0 +1,173 @@
+/* Futuristic Curved Energy Ribbon & Scroll Conduit */
+.curved-scroll-line-container {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 1;
+  overflow: hidden;
+  opacity: 0.65;
+}
+
+.curved-scroll-svg {
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+
+/* Faint Background Guide Track */
+.scroll-path-bg {
+  fill: none;
+  stroke: rgba(149, 213, 178, 0.05);
+  stroke-width: 2.5;
+  stroke-linecap: round;
+}
+
+/* Parallel Tech-Dashed Companion Line */
+.scroll-path-dashed {
+  fill: none;
+  stroke: rgba(149, 213, 178, 0.3);
+  stroke-width: 1.5;
+  stroke-dasharray: 6 12;
+  stroke-linecap: round;
+  will-change: stroke-dashoffset;
+}
+
+/* Main Glowing Energy Core Path */
+.scroll-path-core {
+  fill: none;
+  stroke: url(#cyber-line-grad);
+  stroke-width: 3.5;
+  stroke-linecap: round;
+  filter: url(#cyber-line-glow);
+  will-change: stroke-dashoffset;
+}
+
+/* Section Milestone Waypoint Nodes */
+.waypoint-node {
+  position: absolute;
+  transform: translate(-50%, -50%);
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  pointer-events: none;
+  z-index: 2;
+}
+
+.waypoint-core {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: var(--bg-dark);
+  border: 2px solid rgba(149, 213, 178, 0.3);
+  transition: background 0.4s ease, border-color 0.4s ease, transform 0.4s ease, box-shadow 0.4s ease;
+}
+
+.waypoint-pulse-ring {
+  position: absolute;
+  top: 50%;
+  left: 5px;
+  transform: translate(-50%, -50%) scale(0.6);
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  border: 1px dashed var(--sage-accent);
+  opacity: 0;
+  transition: opacity 0.4s ease, transform 0.4s ease;
+}
+
+.waypoint-label {
+  font-family: var(--font-heading);
+  font-size: 0.72rem;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  opacity: 0.4;
+  transform: translateX(-4px);
+  transition: color 0.4s ease, opacity 0.4s ease, transform 0.4s ease;
+  white-space: nowrap;
+}
+
+/* Active State when Scroll Line passes Waypoint */
+.waypoint-node.active .waypoint-core {
+  background: var(--sage-accent);
+  border-color: var(--sage-light);
+  transform: scale(1.25);
+  box-shadow: 0 0 12px var(--sage-accent), 0 0 24px rgba(149, 213, 178, 0.6);
+}
+
+.waypoint-node.active .waypoint-pulse-ring {
+  opacity: 0.8;
+  transform: translate(-50%, -50%) scale(1.2);
+  animation: spinRing 12s linear infinite;
+}
+
+.waypoint-node.active .waypoint-label {
+  color: var(--sage-accent);
+  opacity: 1;
+  transform: translateX(0);
+  text-shadow: 0 0 10px rgba(149, 213, 178, 0.4);
+}
+
+@keyframes spinRing {
+  from { transform: translate(-50%, -50%) rotate(0deg) scale(1.2); }
+  to { transform: translate(-50%, -50%) rotate(360deg) scale(1.2); }
+}
+
+/* Hardware Accelerated Plasma Leader Orb */
+.scroll-plasma-orb {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 14px;
+  height: 14px;
+  margin-left: -7px;
+  margin-top: -7px;
+  pointer-events: none;
+  will-change: transform;
+  z-index: 3;
+}
+
+.orb-core {
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  background: #ffffff;
+  box-shadow: 0 0 10px #95d5b2, 0 0 20px #52b788, 0 0 35px rgba(149, 213, 178, 0.8);
+}
+
+.orb-ring {
+  position: absolute;
+  inset: -6px;
+  border-radius: 50%;
+  border: 1.5px solid var(--sage-accent);
+  opacity: 0.8;
+  animation: orbPulse 1.6s cubic-bezier(0.16, 1, 0.3, 1) infinite;
+}
+
+@keyframes orbPulse {
+  0% {
+    transform: scale(0.7);
+    opacity: 0.9;
+  }
+  100% {
+    transform: scale(2.4);
+    opacity: 0;
+  }
+}
+
+/* Responsive Hide/Scale */
+@media (max-width: 900px) {
+  .waypoint-label {
+    display: none;
+  }
+}
+
+@media (max-width: 640px) {
+  .curved-scroll-line-container {
+    opacity: 0.35;
+  }
+}

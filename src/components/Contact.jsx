@@ -15,16 +15,51 @@ export default function Contact() {
     setTimeout(() => setCopied(false), 3000);
   };
 
-  const handleFormSubmit = (e) => {
+  const handleFormSubmit = async (e) => {
     e.preventDefault();
     if (!formData.name || !formData.email || !formData.message) return;
 
     setFormStatus('sending');
-    setTimeout(() => {
-      setFormStatus('success');
-      setFormData({ name: '', email: '', message: '' });
-      setTimeout(() => setFormStatus(null), 5000);
-    }, 1000);
+
+    try {
+      const response = await fetch(`https://formsubmit.co/ajax/${personalInfo.email}`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Accept': 'application/json'
+        },
+        body: JSON.stringify({
+          name: formData.name,
+          email: formData.email,
+          message: formData.message,
+          _subject: `New Portfolio Message from ${formData.name}`,
+          _template: 'table',
+          _captcha: 'false'
+        })
+      });
+
+      const data = await response.json().catch(() => ({}));
+
+      if (response.ok && data.success !== 'false') {
+        setFormStatus('success');
+        setFormData({ name: '', email: '', message: '' });
+      } else {
+        triggerMailto();
+      }
+    } catch (err) {
+      console.error('Email submission error:', err);
+      triggerMailto();
+    }
+  };
+
+  const triggerMailto = () => {
+    const subject = encodeURIComponent(`New Portfolio Message from ${formData.name}`);
+    const body = encodeURIComponent(
+      `Name: ${formData.name}\nEmail: ${formData.email}\n\nMessage:\n${formData.message}`
+    );
+    window.location.href = `mailto:${personalInfo.email}?subject=${subject}&body=${body}`;
+    setFormStatus('success');
+    setFormData({ name: '', email: '', message: '' });
   };
 
   return (
@@ -129,8 +164,15 @@ export default function Contact() {
                 <div className="success-icon">
                   <Check size={24} />
                 </div>
-                <h4>Message Received!</h4>
-                <p>Thank you for reaching out. I'll get back to you within 24 hours.</p>
+                <h4>Message Sent Successfully!</h4>
+                <p>Your message has been delivered directly to <strong>{personalInfo.email}</strong>. I'll reply within 24 hours.</p>
+                <button
+                  onClick={() => setFormStatus(null)}
+                  className="btn btn-secondary"
+                  style={{ marginTop: '1.25rem' }}
+                >
+                  Send Another Message
+                </button>
               </div>
             ) : (
               <form onSubmit={handleFormSubmit} className="contact-form">

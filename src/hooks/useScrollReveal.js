@@ -12,25 +12,31 @@ export function useScrollReveal() {
     const revealElements = document.querySelectorAll('.reveal');
 
     revealElements.forEach((el) => {
-      // Add initial inline fallback
-      el.classList.add('active');
+      let delay = 0;
+      if (el.classList.contains('reveal-delay-1')) delay = 0.08;
+      else if (el.classList.contains('reveal-delay-2')) delay = 0.16;
+      else if (el.classList.contains('reveal-delay-3')) delay = 0.24;
+      else if (el.classList.contains('reveal-delay-4')) delay = 0.32;
 
       gsap.fromTo(
         el,
-        { opacity: 0, y: 35 },
+        { opacity: 0, y: 30 },
         {
           opacity: 1,
           y: 0,
-          duration: 0.8,
+          duration: 0.6,
+          delay,
           ease: 'power3.out',
           scrollTrigger: {
             trigger: el,
-            start: 'top 88%',
+            start: 'top 90%',
             toggleActions: 'play none none none',
           },
         }
       );
     });
+
+    ScrollTrigger.refresh();
 
     return () => {
       ScrollTrigger.getAll().forEach((trigger) => trigger.kill());

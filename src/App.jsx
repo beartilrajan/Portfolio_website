@@ -8,13 +8,16 @@ import Contact from './components/Contact';
 import Footer from './components/Footer';
 import FluidSimulation from './components/FluidSimulation';
 import Preloader from './components/Preloader';
+import CurvedScrollLine from './components/CurvedScrollLine';
 import { useScrollReveal } from './hooks/useScrollReveal';
+import { useSmoothScroll } from './hooks/useSmoothScroll';
 import './index.css';
 
 export default function App() {
   const [isLoading, setIsLoading] = useState(true);
 
-  // Initialize GSAP ScrollTrigger scroll reveals
+  // Initialize Lenis smooth scrolling & GSAP scroll reveals
+  useSmoothScroll();
   useScrollReveal();
 
   return (
@@ -24,6 +27,9 @@ export default function App() {
 
       {/* Background Subtle Grid Layer */}
       <div className="bg-grid-overlay"></div>
+
+      {/* Animated Curved Scroll Line */}
+      <CurvedScrollLine />
 
       {/* Main Navigation Header */}
       <Navbar />

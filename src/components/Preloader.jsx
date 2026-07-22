@@ -1,7 +1,10 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { gsap } from 'gsap';
+import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { personalInfo } from '../data/portfolioData';
 import './Preloader.css';
+
+gsap.registerPlugin(ScrollTrigger);
 
 export default function Preloader({ onComplete }) {
   const overlayRef = useRef(null);
@@ -29,19 +32,20 @@ export default function Preloader({ onComplete }) {
           gsap.timeline({
             onComplete: () => {
               document.body.style.overflow = '';
+              ScrollTrigger.refresh();
               if (onComplete) onComplete();
             }
           })
           .to(contentRef.current, {
-            scale: 0.92,
+            scale: 0.94,
             opacity: 0,
-            duration: 0.35,
+            duration: 0.2,
             ease: 'power2.in'
           })
           .to(overlayRef.current, {
             yPercent: -100,
-            duration: 0.75,
-            ease: 'power4.inOut'
+            duration: 0.45,
+            ease: 'power3.inOut'
           });
         }
       });
@@ -49,15 +53,15 @@ export default function Preloader({ onComplete }) {
       // Fade in center typography & circle
       tl.fromTo(
         contentRef.current,
-        { scale: 0.88, opacity: 0 },
-        { scale: 1, opacity: 1, duration: 0.65, ease: 'power3.out' }
+        { scale: 0.9, opacity: 0 },
+        { scale: 1, opacity: 1, duration: 0.4, ease: 'power3.out' }
       );
 
       // Smooth counter & progress line animation
       const counter = { val: 0 };
       tl.to(counter, {
         val: 100,
-        duration: 1.8,
+        duration: 0.8,
         ease: 'power2.inOut',
         onUpdate: () => {
           const current = Math.floor(counter.val);
@@ -69,7 +73,7 @@ export default function Preloader({ onComplete }) {
         }
       });
 
-      tl.to({}, { duration: 0.2 });
+      tl.to({}, { duration: 0.05 });
     }, overlayRef);
 
     return () => {

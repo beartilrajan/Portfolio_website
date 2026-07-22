@@ -10,46 +10,46 @@ export default function Hero() {
 
   useEffect(() => {
     const ctx = gsap.context(() => {
-      const tl = gsap.timeline({ delay: 0.15 });
+      const tl = gsap.timeline({ delay: 0.05 });
 
       tl.fromTo(
         '.hero-status-pill',
-        { opacity: 0, y: 25 },
-        { opacity: 1, y: 0, duration: 0.65, ease: 'power3.out' }
+        { opacity: 0, y: 20 },
+        { opacity: 1, y: 0, duration: 0.5, ease: 'power3.out' }
       )
       .fromTo(
         '.hero-title',
-        { opacity: 0, y: 35 },
-        { opacity: 1, y: 0, duration: 0.75, ease: 'power3.out' },
-        '-=0.45'
+        { opacity: 0, y: 25 },
+        { opacity: 1, y: 0, duration: 0.55, ease: 'power3.out' },
+        '-=0.35'
       )
       .fromTo(
         '.hero-description',
-        { opacity: 0, y: 25 },
-        { opacity: 1, y: 0, duration: 0.65, ease: 'power3.out' },
-        '-=0.45'
+        { opacity: 0, y: 20 },
+        { opacity: 1, y: 0, duration: 0.5, ease: 'power3.out' },
+        '-=0.35'
       )
       .fromTo(
         '.hero-actions',
-        { opacity: 0, y: 25 },
-        { opacity: 1, y: 0, duration: 0.65, ease: 'power3.out' },
-        '-=0.45'
+        { opacity: 0, y: 20 },
+        { opacity: 1, y: 0, duration: 0.5, ease: 'power3.out' },
+        '-=0.35'
       )
       .fromTo(
         '.hero-visual',
-        { opacity: 0, scale: 0.9, y: 35 },
-        { opacity: 1, scale: 1, y: 0, duration: 0.85, ease: 'back.out(1.2)' },
-        '-=0.55'
+        { opacity: 0, scale: 0.95, y: 25 },
+        { opacity: 1, scale: 1, y: 0, duration: 0.6, ease: 'back.out(1.2)' },
+        '-=0.35'
       );
 
       // Continuous subtle ambient float animation for code card
       gsap.to('.hero-code-card', {
-        y: -10,
-        duration: 3.5,
+        y: -8,
+        duration: 3,
         repeat: -1,
         yoyo: true,
         ease: 'sine.inOut',
-        delay: 1.2,
+        delay: 0.8,
       });
     }, heroRef);
 
@@ -67,10 +67,10 @@ export default function Hero() {
   return (
     <section id="hero" ref={heroRef} className="hero-section">
       <div className="container hero-container">
-        {/* Entrance Container with Staggered Keyframes */}
+        {/* Entrance Container */}
         <div className="hero-content">
           {/* Status Badge */}
-          <div className="hero-status-pill hero-entrance-1">
+          <div className="hero-status-pill">
             <span className="status-indicator">
               <span className="status-dot"></span>
               <span className="status-ping"></span>
@@ -79,19 +79,19 @@ export default function Hero() {
           </div>
 
           {/* Main Title & Role */}
-          <h1 className="hero-title hero-entrance-2">
+          <h1 className="hero-title">
             Hi, I'm <span className="hero-name-highlight">{personalInfo.name}</span>.
             <br />
             <span className="hero-role-text">{personalInfo.role}</span>
           </h1>
 
           {/* Positioning Statement */}
-          <p className="hero-description hero-entrance-3">
+          <p className="hero-description">
             {personalInfo.positioning}
           </p>
 
           {/* Action CTAs & Social Links */}
-          <div className="hero-actions hero-entrance-4">
+          <div className="hero-actions">
             <a
               href="#projects"
               onClick={handleScrollToProjects}
@@ -149,7 +149,7 @@ export default function Hero() {
         </div>
 
         {/* Decorative Code Artifact / Tech Snapshot */}
-        <div className="hero-visual hero-entrance-3">
+        <div className="hero-visual">
           <div className="glass-card hero-code-card">
             <div className="code-card-header">
               <div className="code-window-dots">

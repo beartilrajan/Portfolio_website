@@ -214,32 +214,6 @@
   color: var(--sage-accent);
 }
 
-/* Staggered Load Entrance Animations */
-.hero-entrance-1,
-.hero-entrance-2,
-.hero-entrance-3,
-.hero-entrance-4 {
-  opacity: 0;
-  transform: translateY(24px);
-  animation: heroFadeUp 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
-}
-
-.hero-entrance-1 { animation-delay: 100ms; }
-.hero-entrance-2 { animation-delay: 250ms; }
-.hero-entrance-3 { animation-delay: 400ms; }
-.hero-entrance-4 { animation-delay: 550ms; }
-
-@keyframes heroFadeUp {
-  from {
-    opacity: 0;
-    transform: translateY(24px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
 /* Responsive Breakpoints */
 @media (max-width: 1024px) {
   .hero-container {
