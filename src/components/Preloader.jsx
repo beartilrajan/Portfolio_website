@@ -1,33 +1,39 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { gsap } from 'gsap';
-import { Code2 } from 'lucide-react';
 import { personalInfo } from '../data/portfolioData';
 import './Preloader.css';
 
 export default function Preloader({ onComplete }) {
   const overlayRef = useRef(null);
-  const cardRef = useRef(null);
-  const logoRef = useRef(null);
+  const contentRef = useRef(null);
+  const circleRef = useRef(null);
   const fillRef = useRef(null);
   const [percent, setPercent] = useState(0);
-  const [statusText, setStatusText] = useState('Initializing Engine...');
 
   useEffect(() => {
-    // Disable scrolling during preloader
     document.body.style.overflow = 'hidden';
 
     const ctx = gsap.context(() => {
+      // Continuous rotation for background circular orbit ring
+      gsap.to(circleRef.current, {
+        rotation: 360,
+        duration: 10,
+        repeat: -1,
+        ease: 'none',
+        transformOrigin: '50% 50%',
+      });
+
+      // Overall entrance timeline
       const tl = gsap.timeline({
         onComplete: () => {
-          // Outro Animation
           gsap.timeline({
             onComplete: () => {
               document.body.style.overflow = '';
               if (onComplete) onComplete();
             }
           })
-          .to(cardRef.current, {
-            scale: 0.9,
+          .to(contentRef.current, {
+            scale: 0.92,
             opacity: 0,
             duration: 0.35,
             ease: 'power2.in'
@@ -40,39 +46,22 @@ export default function Preloader({ onComplete }) {
         }
       });
 
-      // Entrance of Card & Logo
+      // Fade in center typography & circle
       tl.fromTo(
-        cardRef.current,
-        { scale: 0.85, opacity: 0, y: 30 },
-        { scale: 1, opacity: 1, y: 0, duration: 0.6, ease: 'back.out(1.4)' }
-      )
-      .fromTo(
-        logoRef.current,
-        { rotate: -20, scale: 0.8 },
-        { rotate: 0, scale: 1, duration: 0.5, ease: 'elastic.out(1, 0.5)' },
-        '-=0.3'
+        contentRef.current,
+        { scale: 0.88, opacity: 0 },
+        { scale: 1, opacity: 1, duration: 0.65, ease: 'power3.out' }
       );
 
-      // Percentage Count Up
+      // Smooth counter & progress line animation
       const counter = { val: 0 };
       tl.to(counter, {
         val: 100,
-        duration: 1.6,
+        duration: 1.8,
         ease: 'power2.inOut',
         onUpdate: () => {
           const current = Math.floor(counter.val);
           setPercent(current);
-
-          // Update status messages based on progress
-          if (current < 30) {
-            setStatusText('Initializing WebGL Fluid Engine...');
-          } else if (current < 65) {
-            setStatusText('Loading Selected Projects...');
-          } else if (current < 90) {
-            setStatusText('Compiling UI Components...');
-          } else {
-            setStatusText('System Ready!');
-          }
 
           if (fillRef.current) {
             fillRef.current.style.width = `${current}%`;
@@ -80,7 +69,6 @@ export default function Preloader({ onComplete }) {
         }
       });
 
-      // Short hold at 100%
       tl.to({}, { duration: 0.2 });
     }, overlayRef);
 
@@ -90,28 +78,65 @@ export default function Preloader({ onComplete }) {
     };
   }, [onComplete]);
 
-  return (
-    <div ref={overlayRef} className="preloader-overlay">
-      <div className="preloader-bg-glow"></div>
+  // Formatted bold name without spaces (e.g. "BeartilRajan") matching reference layout
+  const formattedName = personalInfo.name.replace(/\s+/g, '');
 
-      <div ref={cardRef} className="preloader-card">
-        <div ref={logoRef} className="preloader-logo-box">
-          <Code2 size={28} />
+  return (
+    <div ref={overlayRef} className="style-preloader-overlay">
+      {/* Background Radial Glow */}
+      <div className="style-preloader-glow"></div>
+
+      {/* Main Center Content */}
+      <div ref={contentRef} className="style-preloader-content">
+        {/* Background Circular Orbit SVG */}
+        <div className="style-preloader-circle-wrapper">
+          <svg
+            ref={circleRef}
+            className="style-preloader-circle-svg"
+            viewBox="0 0 300 300"
+          >
+            <defs>
+              <linearGradient id="preloader-gradient" x1="0%" y1="0%" x2="100%" y2="100%">
+                <stop offset="0%" stopColor="#95d5b2" stopOpacity="0.8" />
+                <stop offset="100%" stopColor="#23543e" stopOpacity="0.2" />
+              </linearGradient>
+            </defs>
+
+            {/* Background ring track */}
+            <circle
+              cx="150"
+              cy="150"
+              r="135"
+              className="style-circle-bg"
+            />
+            {/* Glowing gradient arc */}
+            <circle
+              cx="150"
+              cy="150"
+              r="135"
+              className="style-circle-accent"
+            />
+            {/* Orbiting glowing dot */}
+            <circle
+              cx="150"
+              cy="15"
+              r="4.5"
+              className="style-circle-dot"
+            />
+          </svg>
         </div>
 
-        <h1 className="preloader-brand-title">
-          {personalInfo.name} <span className="dot">.</span>
+        {/* Center Name Typography */}
+        <h1 className="style-preloader-title">
+          {formattedName}<span className="style-title-dot">.</span>
         </h1>
 
-        <p className="preloader-subtitle">Software & Vision Engineer</p>
-
-        <div className="preloader-track">
-          <div ref={fillRef} className="preloader-fill"></div>
-        </div>
-
-        <div className="preloader-meta">
-          <span className="preloader-status-text">{statusText}</span>
-          <span className="preloader-percent">{percent}%</span>
+        {/* Progress Bar Line & Percentage Readout */}
+        <div className="style-preloader-progress-wrapper">
+          <div className="style-preloader-bar">
+            <div ref={fillRef} className="style-preloader-fill"></div>
+          </div>
+          <span className="style-preloader-percent">{percent}%</span>
         </div>
       </div>
     </div>
