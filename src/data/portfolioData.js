@@ -60,22 +60,41 @@ export const projects = [
     ]
   },
   {
-    id: "weather-app",
-    title: "Responsive Weather App",
-    subtitle: "Real-Time Front-End Forecast App",
+    id: "kerela",
+    title: "Kerala Tourism Showcase",
+    subtitle: "Immersive Travel & Tourism Platform",
     category: "Web Apps",
     featured: true,
-    description: "A responsive front-end weather application fetching real-time meteorological data via async/await and Open-Meteo API, deployed on GitHub Pages.",
-    detailedDescription: "Built with pure Vanilla JavaScript to master asynchronous data fetching, DOM manipulation, error handling, and responsive layout styling without external libraries.",
-    tags: ["Vanilla JS", "Async/Await", "Open-Meteo API", "HTML5/CSS3", "GitHub Pages"],
-    github: "https://github.com/beartilrajan/weather-app",
-    live: "https://beartilrajan.github.io/weather-app",
-    metrics: "Zero Dependencies • GitHub Pages Deployed",
+    description: "A visually rich web application highlighting Kerala's culture, backwaters, and destinations built with interactive animations and responsive design.",
+    detailedDescription: "Built using React 18, Vite, and Tailwind CSS v4 paired with GSAP and Framer Motion for smooth scroll-triggered animations, interactive destination showcases, and modern UI components.",
+    tags: ["React", "Vite", "Tailwind CSS", "GSAP", "Framer Motion"],
+    github: "https://github.com/beartilrajan/Kerela",
+    live: "https://kerela-gilt.vercel.app",
+    metrics: "Vercel Deployed • Framer Motion & GSAP",
     highlights: [
-      "Clean async/await fetching from Open-Meteo REST API",
-      "Dynamic weather status UI based on WMO weather codes",
-      "Zero build step Vanilla JS architecture",
-      "Deployed directly via GitHub Pages"
+      "Scroll-triggered animations and fluid state transitions",
+      "Responsive destination cards and cultural showcase sections",
+      "Optimized asset loading and crisp modern styling with Tailwind v4",
+      "Deployed live on Vercel with high performance"
+    ]
+  },
+  {
+    id: "portfolio-website",
+    title: "Interactive Portfolio Website",
+    subtitle: "Modern 3D & Animated Developer Showcase",
+    category: "Web Apps",
+    featured: true,
+    description: "A sleek, high-performance personal portfolio website built with React 18, Vite, dynamic canvas backgrounds, and glassmorphism styling.",
+    detailedDescription: "Features dynamic particle canvas animations, interactive glassmorphism UI cards, modal architecture breakdowns, responsive scroll effects, and direct contact integration.",
+    tags: ["React", "Vite", "JavaScript", "HTML5/CSS3", "Vercel"],
+    github: "https://github.com/beartilrajan/Portfolio_website",
+    live: "https://portfolio-website-beartil.vercel.app",
+    metrics: "Vercel Deployed • Glassmorphism & Canvas UI",
+    highlights: [
+      "Interactive 3D particle background with dynamic mouse response",
+      "Architecture specs modals with detailed technical highlights",
+      "Glassmorphism UI design with smooth reveal animations",
+      "Responsive layout optimized for mobile and desktop screens"
     ]
   }
 ];
